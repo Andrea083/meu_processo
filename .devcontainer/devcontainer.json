@@ -1,0 +1,9 @@
+{
+  "name": "Java Spring",
+  "image": "mcr.microsoft.com/devcontainers/java:17",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "postCreateCommand": "docker compose up -d",
+  "forwardPorts": [8080, 5432]
+}
