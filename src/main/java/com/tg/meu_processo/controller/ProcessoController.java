@@ -2,9 +2,10 @@ package com.tg.meu_processo.controller;
 
 import com.tg.meu_processo.dto.ProcessoCreateDTO;
 import com.tg.meu_processo.dto.ProcessoDTO;
-import com.tg.meu_processo.service.ProcessoService;
 import com.tg.meu_processo.security.AuthenticatedUserService;
+import com.tg.meu_processo.service.ProcessoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,52 +18,55 @@ import java.util.List;
 public class ProcessoController {
 
     private final ProcessoService service;
-    private final AuthenticatedUserService authenticatedUserService;
+    private final AuthenticatedUserService authService;
 
     @GetMapping
-    public List<ProcessoDTO> listar() {
-        if (authenticatedUserService.isAdmin()) {
-            return service.listarTodos();
-        } else if (authenticatedUserService.isAdvogado()) {
-            return service.listarPorAdvogado(authenticatedUserService.getUsuarioId());
-        } else if (authenticatedUserService.isCliente()) {
-            return service.listarPorCliente(authenticatedUserService.getUsuarioId());
+    public ResponseEntity<List<ProcessoDTO>> listar() {
+        if (authService.isAdmin()) {
+            return ResponseEntity.ok(service.listarTodos());
+        } else if (authService.isAdvogado()) {
+            return ResponseEntity.ok(service.listarPorAdvogado(authService.getUsuarioId()));
+        } else if (authService.isCliente()) {
+            return ResponseEntity.ok(service.listarPorCliente(authService.getUsuarioId()));
         }
-        return List.of();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProcessoDTO> buscar(@PathVariable Long id) {
+    public ResponseEntity<ProcessoDTO> buscarPorId(@PathVariable Long id) {
         ProcessoDTO processo = service.buscarPorId(id);
-        if (podeAcessar(processo)) {
+
+        if (authService.isAdmin()) {
             return ResponseEntity.ok(processo);
         }
-        return ResponseEntity.status(403).build();
+        if (authService.isAdvogado() && processo.advogadoId().equals(authService.getUsuarioId())) {
+            return ResponseEntity.ok(processo);
+        }
+        if (authService.isCliente() && processo.clienteId().equals(authService.getUsuarioId())) {
+            return ResponseEntity.ok(processo);
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ADVOGADO')")
-    public ProcessoDTO criar(@RequestBody ProcessoCreateDTO dto) {
-        return service.criar(dto);
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    public ResponseEntity<ProcessoDTO> criar(@RequestBody ProcessoCreateDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.criar(dto));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ADVOGADO')")
-    public ProcessoDTO atualizar(@PathVariable Long id, @RequestBody ProcessoCreateDTO dto) {
-        return service.atualizar(id, dto);
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    public ResponseEntity<ProcessoDTO> atualizar(@PathVariable Long id, @RequestBody ProcessoCreateDTO dto) {
+        return ResponseEntity.ok(service.atualizar(id, dto));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    public ResponseEntity<String> deletar(@PathVariable Long id) {
+        if (!service.existePorId(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Processo não encontrado");
+        }
         service.deletar(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    private boolean podeAcessar(ProcessoDTO p) {
-        if (authenticatedUserService.isAdmin()) return true;
-        if (authenticatedUserService.isAdvogado()) return p.advogadoId().equals(authenticatedUserService.getUsuarioId());
-        if (authenticatedUserService.isCliente()) return p.clienteId().equals(authenticatedUserService.getUsuarioId());
-        return false;
+        return ResponseEntity.ok("Processo deletado com sucesso");
     }
 }

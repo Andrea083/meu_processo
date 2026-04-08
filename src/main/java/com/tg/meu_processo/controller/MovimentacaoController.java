@@ -5,7 +5,6 @@ import com.tg.meu_processo.dto.MovimentacaoDTO;
 import com.tg.meu_processo.service.MovimentacaoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController

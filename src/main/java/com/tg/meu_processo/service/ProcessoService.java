@@ -19,6 +19,10 @@ public class ProcessoService {
     private final ProcessoRepository repository;
     private final UsuarioRepository usuarioRepository;
 
+    public boolean existePorId(Long id) {
+        return repository.existsById(id);
+    }
+
     public List<ProcessoDTO> listarTodos() {
         return repository.findAll().stream()
                 .map(this::toDTO)
@@ -95,4 +99,5 @@ public class ProcessoService {
                 p.getCliente().getNome()
         );
     }
+
 }

@@ -1,5 +1,6 @@
 package com.tg.meu_processo.controller;
 
+import com.tg.meu_processo.dto.LoginDTO;
 import com.tg.meu_processo.entity.Usuario;
 import com.tg.meu_processo.repository.UsuarioRepository;
 import com.tg.meu_processo.security.JwtService;
@@ -20,37 +21,27 @@ public class AuthController {
     private final JwtService jwtService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
-        String email = request.get("email");
-        String senha = request.get("senha");
+    public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
+        try {
+            Usuario usuario = usuarioRepository.findByEmail(dto.email())
+                    .orElse(null);
 
-        Usuario usuario = usuarioRepository.findByEmail(email)
-                .orElse(null);
+            if (usuario == null || !passwordEncoder.matches(dto.senha(), usuario.getSenha())) {
+                return ResponseEntity.status(401).body(Map.of("erro", "Credenciais inválidas"));
+            }
 
-        if (usuario == null || !passwordEncoder.matches(senha, usuario.getSenha())) {
-            return ResponseEntity.status(401).body(Map.of("error", "Credenciais inválidas"));
+            String token = jwtService.generateToken(usuario.getEmail(), usuario.getPerfil().name(), usuario.getId());
+
+            return ResponseEntity.ok(Map.of(
+                    "token", token,
+                    "perfil", usuario.getPerfil(),
+                    "nome", usuario.getNome(),
+                    "id", usuario.getId()
+            ));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(Map.of("erro", e.getMessage()));
         }
-
-        String token = jwtService.generateToken(email, usuario.getPerfil().name(), usuario.getId());
-
-        return ResponseEntity.ok(Map.of(
-                "token", token,
-                "perfil", usuario.getPerfil(),
-                "nome", usuario.getNome(),
-                "userId", usuario.getId()
-        ));
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Usuario usuario) {
-        if (usuarioRepository.existsByEmail(usuario.getEmail())) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Email já cadastrado"));
-        }
-
-        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-        Usuario saved = usuarioRepository.save(usuario);
-
-        return ResponseEntity.ok(Map.of("message", "Usuário criado", "id", saved.getId()));
     }
 }
 

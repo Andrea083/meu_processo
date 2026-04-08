@@ -21,6 +21,10 @@ public class UsuarioService {
     private final UsuarioRepository repository;
     private final PasswordEncoder passwordEncoder;
 
+    public boolean existePorId(Long id) {
+        return repository.existsById(id);
+    }
+
     public List<UsuarioDTO> listarTodos() {
         return repository.findAll().stream()
                 .map(this::toDTO)
@@ -36,6 +40,9 @@ public class UsuarioService {
     public Map<String, Object> criarPorAdmin(UsuarioCreateDTO dto) {
         if (repository.existsByEmail(dto.email())) {
             throw new RuntimeException("Email já cadastrado");
+        }
+        if (repository.existsByCpf(dto.cpf())) {
+            throw new RuntimeException("CPF já cadastrado");
         }
 
         String senhaGerada = gerarSenha4Digitos();
