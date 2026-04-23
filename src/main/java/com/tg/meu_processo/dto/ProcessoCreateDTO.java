@@ -8,7 +8,7 @@ public record ProcessoCreateDTO(
         String descricao,
         StatusProcesso status,
         String vara,
-        String comarca,
+        //String comarca,
         Long advogadoId,
         Long clienteId
 ) {}

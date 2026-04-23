@@ -17,6 +17,11 @@ public class MovimentacaoController {
         this.service = service;
     }
 
+    @PostMapping("/simular/{processoId}")
+    public List<MovimentacaoDTO> simularColeta(@PathVariable Long processoId) {
+        return service.simularPipelineCompleto(processoId);
+    }
+
     @GetMapping("/processo/{processoId}")
     public List<MovimentacaoDTO> listarPorProcesso(@PathVariable Long processoId) {
         return service.listarPorProcesso(processoId);

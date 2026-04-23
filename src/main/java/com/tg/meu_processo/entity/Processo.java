@@ -30,9 +30,6 @@ public class Processo {
     @Column(length = 100)
     private String vara;
 
-    //@Column(length = 100)
-    //private String comarca;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StatusProcesso status;
