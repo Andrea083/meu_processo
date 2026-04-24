@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000") //permite requisições da porta 3000, usada pelo front
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/usuarios")
 @RequiredArgsConstructor
 public class UsuarioController {
