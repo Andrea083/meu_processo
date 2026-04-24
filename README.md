@@ -17,7 +17,7 @@ Database: PostgreSQL 15+
 Docker: Docker Compose V2 (recomendado)
 
 # Estrutura do Projeto
-<img width="1000" height="2000" alt="Estrutura de pacotes e arquivos" src="https://github.com/user-attachments/assets/82a89614-121a-46b4-9c8c-34251a4a98cc" />
+<img width="700" height="2050" alt="Estrutura de pacotes e arquivos" src="https://github.com/user-attachments/assets/82a89614-121a-46b4-9c8c-34251a4a98cc" />
 
 # Endpoints Principais
 Autenticação:
