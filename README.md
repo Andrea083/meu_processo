@@ -17,50 +17,30 @@ Database: PostgreSQL 15+
 Docker: Docker Compose V2 (recomendado)
 
 # Estrutura do Projeto
-com.tg.meu_processo/
-├── controller/
-│   ├── AuthController
-│   ├── UsuarioController
-│   ├── ProcessoController
-│   └── MovimentacaoController
-├── service/
-│   ├── UsuarioService
-│   ├── ProcessoService
-│   ├── MovimentacaoService
-│   └── NlpTradutorService
-├── entity/
-│   ├── Usuario
-│   ├── Processo
-│   └── Movimentacao
-├── repository/
-├── security/
-│   ├── JwtService
-│   ├── SecurityConfig
-│   └── JwtAuthenticationFilter
-└── DataInitializer
+<img width="1414" height="2000" alt="Estrutura de pacotes e arquivos" src="https://github.com/user-attachments/assets/82a89614-121a-46b4-9c8c-34251a4a98cc" />
 
 # Endpoints Principais
 Autenticação:
 POST /api/auth/login
 
-Usuários (Admin):
+Usuários:
 GET    /api/usuarios
-POST   /api/usuarios
+POST   /api/usuarios 
 PUT    /api/usuarios/{id}
 DELETE /api/usuarios/{id}
 
 Processos:
 GET    /api/processos
-POST   /api/processos      (Apenas Admin) 
+POST   /api/processos      
 PUT    /api/processos/{id}
-DELETE /api/processos/{id} (Apenas Admin)
+DELETE /api/processos/{id} 
 
 # Funcionalidades Principais
 1. Autenticação JWT
 Segurança stateless com tokens JWT. Suporta 3 perfis: ADMINISTRADOR, ADVOGADO, CLIENTE.
 
 2. Tradução NLP
-Converte termos como:
+Exemplo de conversão de termos técnicos:
 "Deferida tutela de urgência" → "O juiz concordou em proteger seus direitos imediatamente"
 "Embargos de Declaração rejeitados" → "Seu pedido foi negado"
 
