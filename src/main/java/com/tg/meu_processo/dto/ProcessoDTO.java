@@ -2,6 +2,7 @@ package com.tg.meu_processo.dto;
 
 import com.tg.meu_processo.entity.enums.StatusProcesso;
 
+//dados completos devolvidos ao cliente.
 public record ProcessoDTO(
         Long id,
         String numeroProcesso,

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
+//mapeia a classe para a tabela
 @Entity
 @Table(name = "usuarios")
 @Data
@@ -24,10 +25,10 @@ public class Usuario {
     private String cpf;
 
     @Column(length = 50)
-    private String cargo; // apenas ADMIN
+    private String cargo; // usado apenas para ADMIN
 
     @Column(length = 20)
-    private String oab; // apenas ADVOGADO
+    private String oab; // usado apenas para ADVOGADO
 
     @Column(nullable = false, unique = true, length = 100)
     private String email;
@@ -47,13 +48,20 @@ public class Usuario {
 
     private LocalDateTime dataAtualizacao;
 
-    @PrePersist
+    @PrePersist //só executa no momento em que um registro for salvo
     protected void onCreate() {
         dataCriacao = LocalDateTime.now();
     }
-
+    //atualiza automaticamente a data sempre que a entidade é modificada
     @PreUpdate
     protected void onUpdate() {
         dataAtualizacao = LocalDateTime.now();
     }
 }
+
+/*
+@PreUpdate marca o método para ser executado automaticamente pelo JPA, imediatamente antes de um
+UPDATE ser enviado ao banco. Você não chama esse método — o próprio JPA/Hibernate dispara.
+@PrePersist e @PreUpdate permitem controle automático de quando foi criado e quando
+foi atualizado pela última vez, um padrão de auditoria muito usado
+*/

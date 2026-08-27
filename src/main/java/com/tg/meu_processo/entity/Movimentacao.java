@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
+//@Entity / @Table → mapeia a classe para a tabela
 @Entity
 @Table(name = "movimentacoes")
 @Data
@@ -25,7 +26,7 @@ public class Movimentacao {
     @Column(nullable = false)
     private LocalDateTime dataMovimentacao;
 
-    @ManyToOne
+    @ManyToOne //relacionamentos
     @JoinColumn(name = "processo_id", nullable = false)
     private Processo processo;
 
@@ -41,3 +42,6 @@ public class Movimentacao {
     }
 }
 
+//entidade JPA que define o mapeamento entre a classe Java e a tabela movimentacoes
+// esta classe descreve como os dados serão guardados
+//@PrePersist onCreate() → só executa no momento em que um registro for salvo, preenchendo dataCriacao.

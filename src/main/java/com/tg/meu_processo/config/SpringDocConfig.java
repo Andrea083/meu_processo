@@ -19,3 +19,7 @@ public class SpringDocConfig {
                         .license(new License().name("Apache 2.0").url("http://springdoc.org")));
     }
 }
+// O SpringDoc gera uma interface visual (Swagger UI, geralmente em /swagger-ui.html)
+// onde pode ver e testar todos os endpoints do backend —
+// captura de dados da AASP, tradução via NLP, arquivamento nos perfis, etc. —
+// sem precisar de Postman, Insomnia ou similar.

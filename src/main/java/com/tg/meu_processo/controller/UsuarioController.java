@@ -1,5 +1,6 @@
 package com.tg.meu_processo.controller;
 
+import com.tg.meu_processo.dto.RecuperarSenhaDTO;
 import com.tg.meu_processo.dto.SenhaUpdateDTO;
 import com.tg.meu_processo.dto.UsuarioCreateDTO;
 import com.tg.meu_processo.dto.UsuarioDTO;
@@ -15,13 +16,13 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("/api/usuarios")
-@RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000") //libera chamadas do front rodando nessa porta (React/Next)
+@RequestMapping("/api/usuarios") // rota base dos métodos
+@RequiredArgsConstructor // Lombok gera o construtor com os campos final
 public class UsuarioController {
 
-    private final UsuarioService service;
-    private final AuthenticatedUserService authService;
+    private final UsuarioService service; // lógica de negócio de usuários
+    private final AuthenticatedUserService authService; // identifica quem está logado
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRADOR')")
@@ -38,14 +39,14 @@ public class UsuarioController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasRole('ADMINISTRADOR')") // só admin pode criar
     public ResponseEntity<Map<String, Object>> criar(@Valid @RequestBody UsuarioCreateDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.criarPorAdmin(dto));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioDTO> atualizar(@PathVariable Long id, @RequestBody UsuarioCreateDTO dto) {
-        if (authService.isAdmin() || authService.isOwner(id)) {
+        if (authService.isAdmin() || authService.isOwner(id)) { //condição de admin OU dono
             return ResponseEntity.ok(service.atualizar(id, dto));
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -60,14 +61,14 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acesso negado");
     }
 
-    @PostMapping("/recuperar-senha")
-    public ResponseEntity<Map<String, String>> recuperarSenha(@RequestBody Map<String, String> body) {
-        return ResponseEntity.ok(service.recuperarSenha(body.get("email")));
+    @PostMapping("/recuperar-senha") //com e-mail validado
+    public ResponseEntity<Map<String, String>> recuperarSenha(@Valid @RequestBody RecuperarSenhaDTO dto) {
+        return ResponseEntity.ok(service.recuperarSenha(dto.email()));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletar(@PathVariable Long id) {
-        if (authService.isAdmin() || authService.isOwner(id)) {
+        if (authService.isAdmin() || authService.isOwner(id)) { //condição de admin OU dono
             if (!service.existePorId(id)) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
             }
@@ -77,3 +78,8 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acesso negado");
     }
 }
+
+// @CrossOrigin — sem ele, o navegador bloquearia (por CORS) as requisições vindas do front em localhost:3000.
+// @Valid: aciona a validação dos campos do DTO (ex.: @NotBlank, @Email). Se algo for inválido, o Spring rejeita antes de executar o método.
+// Sem restrição de acesso — porque quem esqueceu a senha ainda não está logado. Recebe um JSON simples tipo { "email": "x@y.com" } e lê o campo com body.get("email").
+// Padrão geral: operações amplas (listar/criar) são exclusivas do admin; operações sobre um usuário específico liberam o próprio dono; senha é intransferível.

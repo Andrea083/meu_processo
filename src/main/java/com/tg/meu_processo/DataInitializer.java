@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+// @RequiredArgsConstructor (Lombok): gera o construtor e injeta UsuarioRepository e PasswordEncoder
+// CommandLineRunner faz o método run() executar uma vez, na inicialização da aplicação
 public class DataInitializer implements CommandLineRunner {
 
     private final UsuarioRepository usuarioRepository;
@@ -18,12 +20,14 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        //Verifica se já existe um usuário com e-mail
         if (usuarioRepository.findByEmail("admin@sistema.com").isEmpty()) {
             Usuario admin = Usuario.builder()
                     .nome("Administrador")
                     .cpf("00000000000")
                     .email("admin@sistema.com")
-                    .senha(passwordEncoder.encode("admin123"))
+                    //senha admin123 criptografada via passwordEncoder.encode(...) (não salva em texto puro)
+                    .senha(passwordEncoder.encode("admin123")) //lembrar de usar senha fixa apenas no desenvolvimento
                     .perfil(PerfilUsuario.ADMINISTRADOR)
                     .build();
             usuarioRepository.save(admin);

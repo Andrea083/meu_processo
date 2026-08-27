@@ -1,7 +1,8 @@
 package com.tg.meu_processo.dto;
 
-import com.tg.meu_processo.entity.enums.PerfilUsuario;
+import com.tg.meu_processo.entity.enums.PerfilUsuario; //só perfis declarados
 
+//dados devolvidos
 public record UsuarioDTO(
         Long id,
         String nome,
