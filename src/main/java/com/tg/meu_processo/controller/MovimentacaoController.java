@@ -9,12 +9,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/movimentacoes")
+
+//a classe MovimentacaoController vai receber as requisições http e delegar para service
 public class MovimentacaoController {
 
-    private final MovimentacaoService service;
+    //injeta MovimentacaoService, responsável pela lógica, via construtor
+    private final MovimentacaoService service; //campo que guarda a dependência
 
-    public MovimentacaoController(MovimentacaoService service) {
-        this.service = service;
+    public MovimentacaoController(MovimentacaoService service) { //o construtor que recebe
+        this.service = service; // e atribui ao campo
     }
 
     @PostMapping("/simular/{processoId}")
@@ -44,3 +47,8 @@ public class MovimentacaoController {
     }
 }
 
+//@PathVariable pega um valor que vem na própria URL
+//@RequestBody pega os dados JSON que vêm no corpo da requisição
+//ResponseEntity permite controlar a resposta HTTP completa (status, headers, corpo)
+//<Void> significa que não há corpo na resposta
+// Long para "qual recurso" e DTO para "quais informações".
