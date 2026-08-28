@@ -1,9 +1,10 @@
 package com.tg.meu_processo.service;
 
 import org.springframework.stereotype.Component;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+
+import java.text.Normalizer;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class DicionarioJuridico {
@@ -68,17 +69,33 @@ public class DicionarioJuridico {
         termos.put("Classe processual", "Tipo de processo (ação, recurso, etc)");
     }
 
-    public Optional<String> traduzir(String textoOriginal) {
-        // Busca exata
-        if (termos.containsKey(textoOriginal)) {
-            return Optional.of(termos.get(textoOriginal));
-        }
-        // Busca parcial
-        for (Map.Entry<String, String> entrada : termos.entrySet()) {
-            if (textoOriginal.toLowerCase().contains(entrada.getKey().toLowerCase())) {
-                return Optional.of(entrada.getValue());
-            }
-        }
-        return Optional.empty();
+    // Normaliza o texto de entrada (minúsculas, sem acentos, espaços colapsados)
+    // para que a comparação não falhe por diferenças de formatação.
+    public List<String> traduzir(String textoOriginal) {
+        String textoLower = normalizar(textoOriginal);
+
+        // Percorre todas as entradas do dicionário (chave = termo jurídico, valor = explicação).
+        return termos.entrySet().stream()
+                // Mantém apenas as entradas cujo termo (normalizado) aparece dentro do texto.
+                .filter(e -> textoLower.contains(normalizar(e.getKey())))
+
+                // Ordena por tamanho do termo, do maior para o menor:
+                // termos longos são mais específicos e devem vir antes dos genéricos.
+                .sorted(Comparator.comparingInt((Map.Entry<String, String> e) -> e.getKey().length()).reversed())
+
+                // Descarta a chave e mantém apenas o valor (a explicação em linguagem comum).
+                .map(Map.Entry::getValue)
+
+                // Junta os resultados numa lista
+                .collect(Collectors.toList());
+    }
+
+    // Padroniza o texto para tornar a comparação confiável.
+    private String normalizar(String texto) {
+
+        // NFD separa cada letra acentuada em letra base + marca de acento (ex.: "á" -> "a" + "´").
+        return Normalizer.normalize(texto.toLowerCase().trim(), Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")      // remove acentos
+                .replaceAll("\\s+", " ");       // troca qualquer sequência de espaços/quebras por um único espaço
     }
 }

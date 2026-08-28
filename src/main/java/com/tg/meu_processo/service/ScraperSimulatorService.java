@@ -10,7 +10,7 @@ import java.util.Random;
 public class ScraperSimulatorService {
     private final Random random = new SecureRandom();
 
-    // ✅ CORRIGIDO: Agora retorna ProcessoCreateDTO completo com 7 parâmetros
+    // retorna ProcessoCreateDTO completo com 7 parâmetros
     public ProcessoCreateDTO simularNovoProcesso(Long advogadoId, Long clienteId) {
         String[] numerosCNJ = {
                 "0001234-56.2026.8.26.0196",

@@ -1,6 +1,7 @@
 package com.tg.meu_processo.controller;
 
 //testar uso de IA generativa Gemini como tradutor de juridiquês
+import com.tg.meu_processo.service.NlpTradutorService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,18 +10,26 @@ import org.springframework.web.bind.annotation.*;
 public class IaTesteController {
 
     private final ChatClient chatClient;
+    private final NlpTradutorService tradutorService;
 
-    public IaTesteController(ChatClient.Builder builder) {
+    public IaTesteController(ChatClient.Builder builder, NlpTradutorService tradutorService) {
         this.chatClient = builder.build();
+        this.tradutorService = tradutorService;
     }
 
-    @PostMapping ("/perguntar")
-    public String perguntar(@RequestBody PerguntaRequest req) {
+    @PostMapping("/perguntar")
+    public String perguntar(@RequestBody TextoRequest req) {
         return chatClient.prompt()
-                .user(req.pergunta())
+                .user(req.texto())
                 .call()
                 .content();
     }
 
-    public record PerguntaRequest(String pergunta) {}
+    @PostMapping("/traduzir")
+    public NlpTradutorService.ResultadoTraducao traduzir(@RequestBody TextoRequest req) {
+        return tradutorService.traduzirComFonte(req.texto());
+    }
+
+    public record TextoRequest(String texto) {
+    }
 }
