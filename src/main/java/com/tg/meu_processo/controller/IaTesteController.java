@@ -14,11 +14,13 @@ public class IaTesteController {
         this.chatClient = builder.build();
     }
 
-    @GetMapping("/perguntar")
-    public String perguntar(@RequestParam String q) {
+    @PostMapping ("/perguntar")
+    public String perguntar(@RequestBody PerguntaRequest req) {
         return chatClient.prompt()
-                .user(q)
+                .user(req.pergunta())
                 .call()
                 .content();
     }
+
+    public record PerguntaRequest(String pergunta) {}
 }
