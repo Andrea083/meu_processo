@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 // CommandLineRunner faz o método run() executar uma vez, na inicialização da aplicação
 public class DataInitializer implements CommandLineRunner {
 
+    //injetadas via construtor
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
 

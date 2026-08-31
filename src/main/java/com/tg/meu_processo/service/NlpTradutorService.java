@@ -29,7 +29,7 @@ public class NlpTradutorService {
             """;
 
     // Construtor: o Spring injeta as dependências aqui automaticamente.
-    // Recebe o Builder do ChatClient e o "constrói" uma única vez (mais eficiente).
+    // Recebe o Builder do ChatClient e o "constrói" uma única vez.
     public NlpTradutorService(DicionarioJuridico dicionario, ChatClient.Builder chatClientBuilder) {
         this.dicionario = dicionario;                // Guarda o dicionário injetado
         this.chatClient = chatClientBuilder.build(); // Cria o chatClient uma única vez
