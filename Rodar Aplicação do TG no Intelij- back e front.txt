@@ -1,0 +1,18 @@
+
+PARA RODAR APLICAÇÃO NO INTELIJ:
+
+Diretório para arquivo do front:
+ C:\Users\Alex\Desktop\meu_processo\Meu_Processo\artifacts\meu-processo
+
+No código do front (em 06/7/26) não há arquivo .env — o vite.config.ts lê PORT direto do ambiente.
+
+Definir as variáveis PORT e BASE_PATH:
+ $env:PORT=5173
+ $env:BASE_PATH="/"
+
+Rodar:
+ pnpm run dev
+
+Diretório do arquivo do back:
+ C:\Users\Alex\Desktop\meu_processo
+ Clicar play para rodar.
