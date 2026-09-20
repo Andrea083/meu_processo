@@ -17,62 +17,7 @@ Database: PostgreSQL 15+
 Docker: Docker Compose V2 (recomendado)
 
 # Estrutura do Projeto
-meu_processo/
-└── src/
-    └── main/
-        ├── java/
-        │   └── com/
-        │       └── tg/
-        │           └── meu_processo/
-        │               ├── config/
-        │               │   └── SpringDocConfig
-        │               ├── controller/
-        │               │   ├── AuthController
-        │               │   ├── IaTesteController
-        │               │   ├── MovimentacaoController
-        │               │   ├── ProcessoController
-        │               │   └── UsuarioController
-        │               ├── dto/
-        │               │   ├── LoginDTO
-        │               │   ├── MovimentacaoCreateDTO
-        │               │   ├── MovimentacaoDTO
-        │               │   ├── ProcessoCreateDTO
-        │               │   ├── ProcessoDTO
-        │               │   ├── RecuperarSenhaDTO
-        │               │   ├── SenhaUpdateDTO
-        │               │   ├── UsuarioCreateDTO
-        │               │   └── UsuarioDTO
-        │               ├── entity/
-        │               │   ├── enums/
-        │               │   │   ├── PerfilUsuario
-        │               │   │   └── StatusProcesso
-        │               │   ├── Movimentacao
-        │               │   ├── Processo
-        │               │   └── Usuario
-        │               ├── repository/
-        │               │   ├── MovimentacaoRepository
-        │               │   ├── ProcessoRepository
-        │               │   └── UsuarioRepository
-        │               ├── security/
-        │               │   ├── AuthenticatedUserService
-        │               │   ├── JwtAuthenticationFilter
-        │               │   ├── JwtService
-        │               │   ├── SecurityConfig
-        │               │   └── UserDetailsServiceImpl
-        │               ├── service/
-        │               │   ├── DicionarioJuridico
-        │               │   ├── MovimentacaoService
-        │               │   ├── NlpTradutorService
-        │               │   ├── ProcessoService
-        │               │   ├── ScraperSimulatorService
-        │               │   └── UsuarioService
-        │               ├── DataInitializer
-        │               └── MeuProcessoApplication
-        └── resources/
-            ├── static/
-            ├── templates/
-            └── application.properties
-
+<img width="1414" height="2000" alt="Estrutura de arquivos meu_processo" src="https://github.com/user-attachments/assets/99273689-a981-4606-a2ed-ca56f6a490f9" />
 
 # Endpoints Principais
 Autenticação:
